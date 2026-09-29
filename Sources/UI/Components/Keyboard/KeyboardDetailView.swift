@@ -47,10 +47,10 @@ struct KeyboardDetailView: View {
                     Spacer(minLength: 0)
                 }
             }
-            .frame(height: 300)
             .padding(.horizontal, 16)
             .padding(.bottom, 12)
         }
+        .frame(height: 350)
     }
 
     // MARK: - Lighting Section

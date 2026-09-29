@@ -6,12 +6,16 @@ struct VisualEffectBackground: NSViewRepresentable {
     var material: NSVisualEffectView.Material = .popover
     var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
     var state: NSVisualEffectView.State = .active
+    var cornerRadius: CGFloat = 16
 
     func makeNSView(context: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
         view.material = material
         view.blendingMode = blendingMode
         view.state = state
+        view.wantsLayer = true
+        view.layer?.cornerRadius = cornerRadius
+        view.layer?.masksToBounds = true
         return view
     }
 
@@ -19,18 +23,36 @@ struct VisualEffectBackground: NSViewRepresentable {
         nsView.material = material
         nsView.blendingMode = blendingMode
         nsView.state = state
+        nsView.wantsLayer = true
+        nsView.layer?.cornerRadius = cornerRadius
+        nsView.layer?.masksToBounds = true
     }
 }
 
-// Configures the parent NSWindow to have clear backing and seamless shadow
+// Configures the parent NSWindow to have clear backing, rounded bounds, and seamless shadow
 private class WindowConfigView: NSView {
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
+        configureWindow()
+    }
+
+    override func layout() {
+        super.layout()
+        configureWindow()
+    }
+
+    private func configureWindow() {
         guard let window = window else { return }
-        
         window.isOpaque = false
         window.backgroundColor = .clear
         window.hasShadow = true
+
+        if let contentView = window.contentView {
+            contentView.wantsLayer = true
+            contentView.layer?.cornerRadius = 16
+            contentView.layer?.masksToBounds = true
+        }
+
         window.invalidateShadow()
     }
 }
@@ -193,7 +215,7 @@ struct HeadsetDetailView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 350)
-                .padding(16)
+                .padding(.horizontal, 16)
             }
 
             Divider()
@@ -220,7 +242,12 @@ struct HeadsetDetailView: View {
         }
         .frame(width: 390)
         .background(
-            VisualEffectBackground(material: .popover, blendingMode: .behindWindow)
+            VisualEffectBackground(material: .popover, blendingMode: .behindWindow, cornerRadius: 16)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
         )
         .background(WindowConfigurator())
     }
@@ -256,10 +283,10 @@ struct HeadsetDetailView: View {
                     Spacer(minLength: 0)
                 }
             }
-            .frame(height: 300)
             .padding(.horizontal, 16)
             .padding(.bottom, 12)
         }
+        .frame(height: 350)
     }
 
     @ViewBuilder
@@ -278,7 +305,7 @@ struct HeadsetDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 350)
-        .padding(16)
+        .padding(.horizontal, 16)
     }
 
     private func batteryIcon(for percentage: Int) -> String {
