@@ -26,7 +26,7 @@ public final class HIDDeviceSession {
     deinit {
         if isRegistered {
             IOHIDDeviceRegisterInputReportCallback(device, reportBuffer, packetSize, nil, nil)
-            IOHIDDeviceUnscheduleFromRunLoop(device, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
+            IOHIDDeviceUnscheduleFromRunLoop(device, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
         }
         reportBuffer.deallocate()
     }
@@ -41,7 +41,7 @@ public final class HIDDeviceSession {
         }
 
         IOHIDDeviceRegisterInputReportCallback(device, reportBuffer, packetSize, callback, context)
-        IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
+        IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
         isRegistered = true
     }
 
@@ -76,7 +76,7 @@ public final class HIDDeviceSession {
         }
     }
 
-    public func writeForResponse(packet: [UInt8], timeout: TimeInterval = 1.0) -> [UInt8]? {
+    public func writeForResponse(packet: [UInt8], timeout: TimeInterval = 2.0) -> [UInt8]? {
         return queue.sync {
             var fullPacket = packet
             if fullPacket.count < packetSize {

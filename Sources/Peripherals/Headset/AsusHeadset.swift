@@ -45,7 +45,12 @@ open class AsusHeadset: ObservableObject, AsusPeripheral, @unchecked Sendable {
 
     public func synchronizeDevice() {
         workQueue.async {
-            guard let batteryInfo = self.readBattery() else {
+            var batteryInfo = self.readBattery()
+            if batteryInfo == nil {
+                Thread.sleep(forTimeInterval: 0.3)
+                batteryInfo = self.readBattery()
+            }
+            guard let batteryInfo = batteryInfo else {
                 DispatchQueue.main.async {
                     self.isReady = false
                 }

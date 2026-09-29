@@ -53,7 +53,7 @@ public final class HIDManager {
         IOHIDManagerRegisterDeviceMatchingCallback(manager, matchCallback, context)
         IOHIDManagerRegisterDeviceRemovalCallback(manager, removeCallback, context)
 
-        IOHIDManagerScheduleWithRunLoop(manager, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
+        IOHIDManagerScheduleWithRunLoop(manager, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
 
         let openResult = IOHIDManagerOpen(manager, IOOptionBits(kIOHIDOptionsTypeNone))
         if openResult != kIOReturnSuccess {
@@ -71,7 +71,7 @@ public final class HIDManager {
     public func stop() {
         guard isRunning, let manager = manager else { return }
         IOHIDManagerClose(manager, IOOptionBits(kIOHIDOptionsTypeNone))
-        IOHIDManagerUnscheduleFromRunLoop(manager, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
+        IOHIDManagerUnscheduleFromRunLoop(manager, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
         self.manager = nil
         isRunning = false
     }

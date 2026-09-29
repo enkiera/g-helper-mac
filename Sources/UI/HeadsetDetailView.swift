@@ -45,6 +45,7 @@ struct WindowConfigurator: NSViewRepresentable {
 struct HeadsetDetailView: View {
     @ObservedObject var manager: PeripheralManager
     @State private var selectedHeadsetTab: Int = 0
+    @State private var isRefreshing: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -135,11 +136,19 @@ struct HeadsetDetailView: View {
                     }
 
                     Button {
+                        isRefreshing = true
                         peripheral.synchronizeDevice()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isRefreshing = false
+                            }
+                        }
                     } label: {
                         Image(systemName: "arrow.clockwise")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.secondary)
+                            .rotationEffect(.degrees(isRefreshing ? 360 : 0))
+                            .animation(isRefreshing ? .linear(duration: 0.8).repeatForever(autoreverses: false) : .default, value: isRefreshing)
                     }
                     .buttonStyle(.plain)
                     .frame(width: 26, height: 26)
@@ -186,7 +195,8 @@ struct HeadsetDetailView: View {
                         .multilineTextAlignment(.center)
                     Spacer()
                 }
-                .frame(maxWidth: .infinity, minHeight: 220)
+                .frame(maxWidth: .infinity)
+                .frame(height: 350)
                 .padding(16)
             }
 
@@ -270,7 +280,8 @@ struct HeadsetDetailView: View {
                 .multilineTextAlignment(.center)
             Spacer()
         }
-        .frame(maxWidth: .infinity, minHeight: 180)
+        .frame(maxWidth: .infinity)
+        .frame(height: 350)
         .padding(16)
     }
 
