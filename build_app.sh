@@ -7,8 +7,17 @@ cd "$SCRIPT_DIR"
 mkdir -p "$SCRIPT_DIR/.build/cache"
 export CLANG_MODULE_CACHE_PATH="$SCRIPT_DIR/.build/cache"
 
-echo "🔨 Building GHelperMac (Release)..."
-DEVELOPER_DIR="/Applications/Xcode-beta.app/Contents/Developer" \
+# Use full release Xcode if installed, fallback to Xcode-beta or xcode-select
+if [ -d "/Applications/Xcode.app/Contents/Developer" ]; then
+    DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
+elif [ -d "/Applications/Xcode-beta.app/Contents/Developer" ]; then
+    DEVELOPER_DIR="/Applications/Xcode-beta.app/Contents/Developer"
+else
+    DEVELOPER_DIR="$(xcode-select -p 2>/dev/null || echo '/Library/Developer/CommandLineTools')"
+fi
+export DEVELOPER_DIR
+
+echo "🔨 Building GHelperMac (Release) using $DEVELOPER_DIR..."
 swift build -c release --disable-sandbox -Xswiftc -module-cache-path -Xswiftc "$SCRIPT_DIR/.build/cache"
 
 APP_NAME="GHelperMac.app"
