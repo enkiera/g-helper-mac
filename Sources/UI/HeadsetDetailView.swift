@@ -233,10 +233,14 @@ struct HeadsetDetailView: View {
                 .opacity(0.3)
 
             // Footer
-            HStack {
+            HStack(spacing: 6) {
                 Text("GHelper Mac")
-                    .font(.caption2)
+                    .font(.caption2.weight(.medium))
                     .foregroundColor(.secondary)
+
+                Text(appVersion)
+                    .font(.caption2)
+                    .foregroundColor(.secondary.opacity(0.6))
 
                 Spacer()
 
@@ -335,5 +339,10 @@ struct HeadsetDetailView: View {
         case 20..<40: return .orange
         default: return .primary
         }
+    }
+
+    private var appVersion: String {
+        let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.2"
+        return "v\(ver)"
     }
 }
