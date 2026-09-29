@@ -8,8 +8,6 @@ Built with **Swift, SwiftUI, and Apple IOKit HID** with zero external dependenci
 
 ## ✨ Features
 
-- **Liquid Glass Aesthetic:** Designed specifically for modern macOS with native `.behindWindow` frosted glass vibrancy, subtle hairline borders, and fluid animations.
-- **Dedicated Menu Bar Icon:** Clean monochrome circular G-Helper icon matching the macOS menu bar style.
 - **Multi-Device Support:** Plug in multiple ASUS peripherals simultaneously; the app dynamically adds a top pill-switcher with device-specific icons (🎧, 🖱️, ⌨️) and live battery readouts.
 - **Pure User-Space USB HID:** Direct vendor-page (`0xFF00`) communication using native `IOKit.hid`. Requires zero kernel drivers, system extensions, or accessibility permissions.
 
