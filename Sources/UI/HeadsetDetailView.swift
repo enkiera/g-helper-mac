@@ -76,29 +76,40 @@ struct HeadsetDetailView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(manager.allPeripherals, id: \.id) { dev in
+                            let isSelected = manager.selectedPeripheral?.id == dev.id
                             Button {
-                                manager.selectedPeripheralID = dev.id
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                                    manager.selectedPeripheralID = dev.id
+                                }
                             } label: {
-                                HStack(spacing: 6) {
+                                HStack(spacing: 5) {
                                     Image(systemName: dev.peripheralType.iconName)
-                                    Text(dev.displayName)
-                                        .font(.subheadline)
+                                        .font(.system(size: 11, weight: isSelected ? .semibold : .regular))
+                                    
+                                    if isSelected {
+                                        Text(dev.displayName)
+                                            .font(.system(size: 11, weight: .medium))
+                                            .lineLimit(1)
+                                            .transition(.opacity.combined(with: .move(edge: .leading)))
+                                    }
+
                                     if dev.isReady && dev.battery > 0 {
                                         Text("\(dev.battery)%")
-                                            .font(.system(size: 11, weight: .semibold, design: .rounded))
-                                            .foregroundColor(dev.battery < 20 ? .red : .secondary)
+                                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                                            .foregroundColor(dev.battery < 20 ? .red : (isSelected ? .primary : .secondary))
                                     }
                                 }
-                                .padding(.horizontal, 10)
+                                .padding(.horizontal, isSelected ? 10 : 8)
                                 .padding(.vertical, 5)
-                                .background(manager.selectedPeripheralID == dev.id ? Color.accentColor.opacity(0.2) : Color.primary.opacity(0.06))
+                                .background(isSelected ? Color.accentColor.opacity(0.2) : Color.primary.opacity(0.06))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .stroke(manager.selectedPeripheralID == dev.id ? Color.accentColor.opacity(0.8) : Color.white.opacity(0.12), lineWidth: 1)
+                                        .stroke(isSelected ? Color.accentColor.opacity(0.8) : Color.white.opacity(0.12), lineWidth: 1)
                                 )
                                 .cornerRadius(8)
                             }
                             .buttonStyle(.plain)
+                            .help(dev.displayName)
                         }
                     }
                     .padding(.horizontal, 16)
