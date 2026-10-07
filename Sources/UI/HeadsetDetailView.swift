@@ -83,7 +83,7 @@ struct HeadsetDetailView: View {
                                 }
                             } label: {
                                 HStack(spacing: 5) {
-                                    Image(systemName: dev.peripheralType.iconName)
+                                    Image(systemName: dev.iconSymbol)
                                         .font(.system(size: 11, weight: isSelected ? .semibold : .regular))
                                     
                                     if isSelected {
@@ -128,7 +128,7 @@ struct HeadsetDetailView: View {
                             .fill(peripheral.isReady ? Color.accentColor.opacity(0.18) : Color.secondary.opacity(0.12))
                             .frame(width: 44, height: 44)
 
-                        Image(systemName: peripheral.peripheralType.iconName)
+                        Image(systemName: peripheral.iconSymbol)
                             .font(.system(size: 20))
                             .foregroundColor(peripheral.isReady ? .accentColor : .secondary)
                     }
@@ -272,14 +272,31 @@ struct HeadsetDetailView: View {
     private func headsetControls(headset: AsusHeadset) -> some View {
         VStack(spacing: 0) {
             Picker("", selection: $selectedHeadsetTab) {
-                Text("Equalizer").tag(0)
-                Text("Lighting").tag(1)
-                Text("Audio").tag(2)
-                Text("Power").tag(3)
+                if headset.hasEqualizer {
+                    Text("Equalizer").tag(0)
+                }
+                if headset.hasLighting {
+                    Text("Lighting").tag(1)
+                }
+                if headset.hasAudioSettings {
+                    Text("Audio").tag(2)
+                }
+                if headset.hasPowerSettings {
+                    Text("Power").tag(3)
+                }
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
+            .onAppear {
+                if !headset.hasEqualizer && selectedHeadsetTab == 0 {
+                    if headset.hasAudioSettings {
+                        selectedHeadsetTab = 2
+                    } else if headset.hasPowerSettings {
+                        selectedHeadsetTab = 3
+                    }
+                }
+            }
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
@@ -342,7 +359,7 @@ struct HeadsetDetailView: View {
     }
 
     private var appVersion: String {
-        let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.2"
+        let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.3"
         return "v\(ver)"
     }
 }

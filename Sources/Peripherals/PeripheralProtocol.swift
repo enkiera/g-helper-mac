@@ -27,3 +27,15 @@ public protocol AsusPeripheral: AnyObject, Identifiable {
     func synchronizeDevice()
     func pollBattery()
 }
+
+extension AsusPeripheral {
+    public var iconSymbol: String {
+        if displayName.contains("Dock") {
+            return "dock.rectangle"
+        }
+        if displayName.contains("Balteus") || displayName.contains("Mousepad") {
+            return "square.inset.filled"
+        }
+        return peripheralType.iconName
+    }
+}

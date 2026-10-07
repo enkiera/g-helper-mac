@@ -81,9 +81,10 @@ public enum MouseRegistry {
         0x1910: MouseMetadata(displayName: "TUF Gaming M3", maxDpi: 7000, hasBattery: false),
         0x1898: MouseMetadata(displayName: "TUF Gaming M5", maxDpi: 6200, hasBattery: false),
 
-        // ProArt & Balteus
+        // ProArt, Balteus & Docks
         0x1A24: MouseMetadata(displayName: "ProArt Mouse MD200", maxDpi: 4200, hasBattery: true),
-        0x1891: MouseMetadata(displayName: "ROG Balteus Mousepad", maxDpi: 0, hasBattery: false)
+        0x1891: MouseMetadata(displayName: "ROG Balteus Mousepad", maxDpi: 0, hasBattery: false),
+        0x1C7F: MouseMetadata(displayName: "ROG Bulwark Dock", maxDpi: 0, hasBattery: false, reportId: 0xEC)
     ]
 
     public static func isMouse(productId: Int) -> Bool {

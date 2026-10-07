@@ -122,6 +122,8 @@ public final class PeripheralManager: ObservableObject, HIDManagerDelegate {
                     headset = ROGClavis(session: session, id: deviceID)
                 case ROGCetraRGB.productID, ROGCetraRGB.productID2:
                     headset = ROGCetraRGB(session: session, id: deviceID)
+                case ROGStrixGo24.productID:
+                    headset = ROGStrixGo24(session: session, id: deviceID)
                 default:
                     headset = AsusHeadset(session: session, id: deviceID)
                 }

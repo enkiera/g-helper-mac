@@ -7,10 +7,21 @@ private let logger = Logger(subsystem: "com.ghelper.mac", category: "AsusHeadset
 open class AsusHeadset: ObservableObject, AsusPeripheral, @unchecked Sendable {
     public let id: String
     public let session: HIDDeviceSession
-    public let reportId: UInt8 = 0xCC
+    open var reportId: UInt8 { 0xCC }
     public let peripheralType: PeripheralType = .headset
 
     open var displayName: String { "ASUS ROG Headset" }
+
+    // Capabilities
+    open var hasEqualizer: Bool { true }
+    open var hasLighting: Bool { true }
+    open var hasAudioSettings: Bool { true }
+    open var hasPowerSettings: Bool { true }
+    open var hasSidetone: Bool { true }
+    open var hasNoiseReduction: Bool { true }
+    open var hasVoicePrompt: Bool { true }
+    open var hasLowBatteryWarning: Bool { true }
+    open var hasReset: Bool { true }
 
     // MARK: - Published State
     @Published public var isReady: Bool = false
@@ -198,7 +209,7 @@ open class AsusHeadset: ObservableObject, AsusPeripheral, @unchecked Sendable {
 
     // MARK: - Low-Level Packet Methods
 
-    public func readBattery() -> (battery: Int, isCharging: Bool, sleepTimer: Int, lowBatteryWarning: Int)? {
+    open func readBattery() -> (battery: Int, isCharging: Bool, sleepTimer: Int, lowBatteryWarning: Int)? {
         guard let response = session.writeForResponse(packet: [reportId, 0x12, 0x07]),
               response.count >= 9,
               response[6] <= 100 else {
@@ -217,7 +228,7 @@ open class AsusHeadset: ObservableObject, AsusPeripheral, @unchecked Sendable {
         return (battery, isCharging, sleepTimer, lowBatteryWarning)
     }
 
-    public func writeEnergySettings(sleepTimer: Int, lowBatteryWarning: Int, prompt: Bool = true) {
+    open func writeEnergySettings(sleepTimer: Int, lowBatteryWarning: Int, prompt: Bool = true) {
         let packet: [UInt8] = [
             reportId, 0x51, 0x37, 0x00, 0x00,
             UInt8(clamping: sleepTimer),
@@ -315,7 +326,7 @@ open class AsusHeadset: ObservableObject, AsusPeripheral, @unchecked Sendable {
         return (enabled, level)
     }
 
-    public func writeNoiseReduction(enabled: Bool, level: Int) {
+    open func writeNoiseReduction(enabled: Bool, level: Int) {
         _ = session.writeForResponse(packet: [reportId, 0x41, 0x02, 0x00, 0x00, enabled ? 1 : 0])
         _ = session.writeForResponse(packet: [reportId, 0x41, 0x10, 0x00, 0x00, UInt8(clamping: level)])
     }

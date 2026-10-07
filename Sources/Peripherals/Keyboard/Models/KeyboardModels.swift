@@ -51,10 +51,12 @@ public enum KeyboardRegistry {
         0x19FC: KeyboardMetadata(displayName: "ROG Strix Flare II", hasBattery: false, hasOled: false),
         0x19FE: KeyboardMetadata(displayName: "ROG Strix Flare II Animate", hasBattery: false, hasOled: true),
 
-        // ASUS TUF Keyboards
+        // ASUS TUF & TX Keyboards
         0x1945: KeyboardMetadata(displayName: "TUF Gaming K1", hasBattery: false, hasOled: false),
         0x194B: KeyboardMetadata(displayName: "TUF Gaming K3", hasBattery: false, hasOled: false),
-        0x1B30: KeyboardMetadata(displayName: "TUF Gaming K3 Gen II", hasBattery: false, hasOled: false)
+        0x1B30: KeyboardMetadata(displayName: "TUF Gaming K3 Gen II", hasBattery: false, hasOled: false),
+        0x1C60: KeyboardMetadata(displayName: "TUF Gaming K3 Gen II Miku Edition", hasBattery: false, hasOled: false),
+        0x1B3A: KeyboardMetadata(displayName: "ASUS TX 98", hasBattery: false, hasOled: false)
     ]
 
     public static func isKeyboard(productId: Int) -> Bool {

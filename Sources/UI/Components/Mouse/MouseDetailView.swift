@@ -3,7 +3,12 @@ import AppKit
 
 struct MouseDetailView: View {
     @ObservedObject var mouse: AsusMouse
-    @State private var selectedTab: Int = 0
+    @State private var selectedTab: Int
+
+    init(mouse: AsusMouse) {
+        self.mouse = mouse
+        _selectedTab = State(initialValue: mouse.metadata.maxDpi > 0 ? 0 : 2)
+    }
 
     private let presetColors: [(name: String, color: Color)] = [
         ("Red", Color(red: 1.0, green: 0.0, blue: 0.0)),
@@ -20,8 +25,10 @@ struct MouseDetailView: View {
         VStack(spacing: 0) {
             // Tab Picker
             Picker("", selection: $selectedTab) {
-                Text("DPI").tag(0)
-                Text("Performance").tag(1)
+                if mouse.metadata.maxDpi > 0 {
+                    Text("DPI").tag(0)
+                    Text("Performance").tag(1)
+                }
                 Text("Lighting").tag(2)
                 if mouse.metadata.hasBattery {
                     Text("Power").tag(3)
